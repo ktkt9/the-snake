@@ -7,6 +7,8 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
+
+# Координаты центра экрана:
 CENTER_POSITION = (
     (GRID_WIDTH // 2) * GRID_SIZE,
     (GRID_HEIGHT // 2) * GRID_SIZE
@@ -18,28 +20,18 @@ DOWN = (0, 1)
 LEFT = (-1, 0)
 RIGHT = (1, 0)
 
-# Цвет фона - черный:
+# Цвета:
 BOARD_BACKGROUND_COLOR = (0, 0, 0)
-
-# Цвет границы ячейки
 BORDER_COLOR = (93, 216, 228)
-
-# Цвет яблока
 APPLE_COLOR = (255, 0, 0)
-
-# Цвет змейки
 SNAKE_COLOR = (0, 255, 0)
 
-# Скорость движения змейки:
+# Скорость:
 SPEED = 10
 
-# Настройка игрового окна:
+# Настройка окна:
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), 0, 32)
-
-# Заголовок окна игрового поля:
 pygame.display.set_caption('Змейка')
-
-# Настройка времени:
 clock = pygame.time.Clock()
 
 
@@ -88,6 +80,8 @@ class Snake(GameObject):
 
     def __init__(self, position=None, body_color=SNAKE_COLOR):
         """Создаёт змейку с заданными позицией и цветом."""
+        if position is None:
+            position = CENTER_POSITION
         super().__init__(position, body_color)
         self.length = 1
         self.positions = [self.position]
@@ -119,17 +113,11 @@ class Snake(GameObject):
 
     def draw(self):
         """Отрисовывает все сегменты змейки и стирает удалённый хвост."""
-        for position in self.positions[:-1]:
+        for position in self.positions:
             rect = pygame.Rect(position, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, self.body_color, rect)
             pygame.draw.rect(screen, BORDER_COLOR, rect, 1)
 
-        # Отрисовка головы змейки
-        head_rect = pygame.Rect(self.positions[0], (GRID_SIZE, GRID_SIZE))
-        pygame.draw.rect(screen, self.body_color, head_rect)
-        pygame.draw.rect(screen, BORDER_COLOR, head_rect, 1)
-
-    # Затирание последнего сегмента
         if self.last:
             last_rect = pygame.Rect(self.last, (GRID_SIZE, GRID_SIZE))
             pygame.draw.rect(screen, BOARD_BACKGROUND_COLOR, last_rect)
