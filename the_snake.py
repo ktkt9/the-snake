@@ -7,8 +7,10 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
 GRID_SIZE = 20
 GRID_WIDTH = SCREEN_WIDTH // GRID_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // GRID_SIZE
-X_SIZE_MID = (GRID_WIDTH // 2) * GRID_SIZE
-Y_SIZE_MID = (GRID_HEIGHT // 2) * GRID_SIZE
+CENTER_POSITION = (
+    (GRID_WIDTH // 2) * GRID_SIZE,
+    (GRID_HEIGHT // 2) * GRID_SIZE
+)
 
 # Направления движения:
 UP = (0, -1)
@@ -44,11 +46,8 @@ clock = pygame.time.Clock()
 class GameObject:
     """Базовый класс для игровых объектов."""
 
-    def __init__(self, position=None, body_color=None):
+    def __init__(self, position=CENTER_POSITION, body_color=None):
         """Инициализирует объект с заданной позицией и цветом."""
-        if position is None:
-            position = ((GRID_WIDTH // 2) * GRID_SIZE,
-                        (GRID_HEIGHT // 2) * GRID_SIZE)
         self.position = position
         self.body_color = body_color
 
@@ -59,12 +58,10 @@ class GameObject:
 class Apple(GameObject):
     """Класс яблока, которое змейка собирает на поле."""
 
-    def __init__(self, position=None, body_color=None, occupied=None):
+    def __init__(self, position=None, body_color=APPLE_COLOR, occupied=None):
         """Создаёт яблоко в случайной клетке поля."""
         super().__init__(position, body_color)
-        if self.body_color is None:
-            self.body_color = APPLE_COLOR
-        if position is None:
+        if not position:
             self.randomize_position(occupied)
 
     def randomize_position(self, occupied=None):
@@ -89,11 +86,9 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Класс змейки, управляемой игроком."""
 
-    def __init__(self, position=None, body_color=None):
+    def __init__(self, position=None, body_color=SNAKE_COLOR):
         """Создаёт змейку с заданными позицией и цветом."""
         super().__init__(position, body_color)
-        if self.body_color is None:
-            self.body_color = SNAKE_COLOR
         self.length = 1
         self.positions = [self.position]
         self.direction = RIGHT
